@@ -1,0 +1,123 @@
+Step by step method on how I setup my server (ec2 instance on AWS), configure firewalls (security group) download a web server (nginx) and deploy my html landing page.
+
+Step1: I open a web browser on my desktop and go to https://aws.amazon.com/
+Step2: I created an AWS account by signing up for a free AWS account: I clicked on create an AWS account. I followed the prompt to enter my email and choose a password. I set my account and choose free tier.
+To launch an Amazon EC2 instance with Security Groups in AWS, I followed the steps below:
+Step 1: Sign in to AWS Management Console
+1.	Log in to AWS: Go to the AWS Management Console and sign in using your credentials.
+Step 2: Navigate to EC2 Service
+1.	Once logged in, type EC2 in the search bar or find EC2 under the Services menu.
+2.	Click on EC2 to open the EC2 Dashboard.
+Step 3: Launch an EC2 Instance
+1.	On the EC2 Dashboard, click the Launch Instance button to start the instance creation process.
+Step 4: Choose an Amazon Machine Image (AMI)
+1.	Select an AMI: Choose an operating system image for your instance (e.g., Amazon Linux 2, Ubuntu, Microsoft Windows Server, etc.). Here I choose Ubuntu.
+2.	Click on the Select button next to the AMI you want to use.
+Step 5: Choose an Instance Type
+1.	Choose Instance Type: Select an instance type based on your needs (e.g., t2.micro for the free tier, t3.medium, etc.). Instance types vary in terms of CPU, memory, storage, and networking capacity.
+2.	After selecting an instance type, i click the Next: Configure Instance Details button.
+Step 6: Configure Instance Details
+1.	I configure my instance details like the number of instances, network, and subnet.
+2.	Under Network, you can select the default VPC or a custom 
+3.	I Click Next: Add Storage
+Step 7: Configure Security Group
+A Security Group acts as a virtual firewall that controls inbound and outbound traffic to your EC2 instance.
+Option 1: Select an Existing Security Group
+•	If you have an existing Security Group, you can select it from the list. This option allows you to apply predefined rules that you've set for that security group.
+Option 2: Create a New Security Group
+1.	Create a new security group:
+o	Choose a name and description for your new security group (e.g., MyEC2SecurityGroup).
+2.	Add inbound rules:
+o	For example, to allow SSH access (for Linux) or RDP access (for Windows), add rules:
+	Type: SSH (for Linux instances) or RDP (for Windows instances).
+	Protocol: TCP.
+	Port Range: 22 (for SSH) or 3389 (for RDP).
+	Source: You can choose Anywhere (0.0.0.0/0) for open access or a more restricted IP range for tighter security (e.g., 192.168.1.0/24).
+Step3: connect to the server (ssh)
+Once the instance is launched, you need to connect to it from your computer using SSH. Step 1: Locate the Public IP Address
+Go back to the EC2 Dashboard.
+Click on "Instances".
+Select your instance and note the Public IP Address.
+Example:
+Public IP: 5.447.90.81
+Step 2: Use SSH to Connect
+On Linux/macOS:
+Open your terminal.
+Navigate to the location where your key pair file (my-key.pem) is saved.
+cd /path/to/keyfile
+Modify the permissions of the key file (required for SSH):
+chmod 400 my-key.pem
+Connect to the server using SSH:
+ssh -i my-key.pem ubuntu@<your_server_public_ip>
+Replace <your_server_public_ip> with your server's actual IP address.
+Example:
+ssh -i my-key.pem ubuntu@5.447.90.81
+
+If prompted, type yes to confirm the connection.
+On Windows:
+Download PuTTY (an SSH client) from:
+https://www.putty.org/
+Use PuTTYgen to convert your my-key.pem file to .ppk format:
+    Open PuTTYgen > Load the my-key.pem file > Save the private key as bethel@key.
+
+Open PuTTY:
+ In the Host Name field, enter ubuntu@<your_server_public_ip>.
+ Under Connection > SSH > Auth, browse to your bethel@key file.
+ Click Open to connect.
+Install and Set Up Nginx Web Server
+Update the Server: Run this command to update the package list:
+sudo apt update
+Install Nginx: Install the Nginx web server:
+sudo apt install Nginx –y
+
+Start Nginx:
+sudo systemctl start Nginx sudo systemctl enable Nginx
+Test Nginx Installation: Open your web browser and go to:
+http://<your_server_public_ip:80>
+You should see the default Nginx page.
+Deploy Your HTML Page
+Navigate to Nginx Document Root:
+cd /var/www/html
+Edit or Create an HTML File:
+sudo nano index.html
+Add Content: Paste a basic HTML structure:
+<title>EXAMLanding Page</title>
+
+Save and Exit:
+Press CTRL + O to save.
+Press CTRL + X to exit.
+Restart Nginx:
+sudo systemctl restart Nginx
+
+Access Your Page:
+ Open a browser and go to:
+
+http://<your_server_public_ip:80>
+You should now see your custom HTML page.
+Security: Configuring the Firewall
+Allow HTTP and SSH traffic:
+sudo ufw allow 'Nginx' sudo ufw allow OpenSSH sudo ufw enable
+
+Check firewall status:
+sudo ufw status
+following these steps
+
+You have successfully:
+Created an AWS account.
+Launched a Linux server (EC2 instance).
+Installed Nginx and deployed an HTML page.
+Configured basic security settings.
+Congratulations
+You can now host websites or applications on this server.
+
+#Servers Public Ip
+
+13.48.29.211
+
+#Public IPv4 DNS
+
+ec2-13-48-29-211.eu-north-1.compute.amazonaws.com
+
+	
+
+
